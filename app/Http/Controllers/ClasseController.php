@@ -17,6 +17,13 @@ class ClasseController extends Controller
         //
     }
 
+    public function fetch()
+    {
+        $classes = Classe::get();
+
+        return $classes;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -81,5 +88,20 @@ class ClasseController extends Controller
     public function destroy(Classe $classe)
     {
         //
+    }
+
+    public function softget(Request $request)
+    {
+        $data = [];
+
+        if($request->has('q')){
+            $search = $request->q;
+            $data = DB::table("classes")
+                ->select("id","intitule")
+                ->where('intitule', 'LIKE',"%$search%")
+                ->get();
+        }
+
+        return response()->json($data);
     }
 }

@@ -32,7 +32,7 @@ class Cours extends BaseModel implements Auditable
 
     protected $guarded = [];
 
-    protected $with = ['classe','chapitres'];
+    protected $with = ['auteur','classe','chapitres'];
 
     #region Validation Rules
 

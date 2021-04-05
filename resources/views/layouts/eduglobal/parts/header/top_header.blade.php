@@ -18,7 +18,6 @@
                     </ul>
                     <ul class="list_none header_list border_list ml-1">
                         <li><a href="#" data-toggle="modal" data-target="#Login">Login</a></li>
-                        <li><a href="#" class="btn btn-default btn-sm rounded-0">Apply Now</a></li>
                     </ul>
                 </div>
             </div>

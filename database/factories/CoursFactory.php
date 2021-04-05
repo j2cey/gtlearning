@@ -26,6 +26,7 @@ class CoursFactory extends Factory
             'intitule' => $this->faker->unique()->sentence($nb_words),
             'description' => $this->faker->unique()->paragraph(),
             'auteur_id' => null,
+            'image' => ""
         ];
     }
 }

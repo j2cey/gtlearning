@@ -19,10 +19,21 @@ class PermissionSeeder extends Seeder
             ['role-create', 1],
             ['role-edit', 1],
             ['role-delete', 1],
-            ['workflow-list', 4],
-            ['workflow-create', 3],
-            ['workflow-edit', 3],
-            ['workflow-delete', 3]
+            // Cours
+            ['cours-list', 4],
+            ['cours-create', 3],
+            ['cours-edit', 3],
+            ['cours-delete', 3],
+            // Chapitre
+            ['chapitre-list', 4],
+            ['chapitre-create', 3],
+            ['chapitre-edit', 3],
+            ['chapitre-delete', 3],
+            // Session
+            ['session-list', 4],
+            ['session-create', 3],
+            ['session-edit', 3],
+            ['session-delete', 3]
         ];
 
         foreach ($permissions as $permission) {

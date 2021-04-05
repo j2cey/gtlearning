@@ -47,6 +47,8 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
+    @yield('more_css')
+
 </head>
 
 <body>
@@ -128,6 +130,8 @@
 <script src="{{ asset('eduglobal_assets/js/jquery.parallax-scroll.js') }}"></script>
 <!-- scripts js -->
 <script src="{{ asset('eduglobal_assets/js/scripts.js') }}"></script>
+
+@yield('more_js')
 
 </body>
 </html>

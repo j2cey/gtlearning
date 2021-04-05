@@ -16,6 +16,10 @@
                     <div class="dropdown-menu">
                         <ul>
                             <li><a class="dropdown-item nav-link nav_item" href="/niveaux">Tous les Niveaux</a></li>
+                            <li><a class="dropdown-item nav-link nav_item" href="{{ route('niveaux.byid', 1) }}">Primaire</a></li>
+                            <li><a class="dropdown-item nav-link nav_item" href="{{ route('niveaux.byid', 2) }}">College</a></li>
+                            <li><a class="dropdown-item nav-link nav_item" href="{{ route('niveaux.byid', 3) }}">Lycée</a></li>
+                            <li><a class="dropdown-item nav-link nav_item" href="{{ route('niveaux.byid', 4) }}">Supérieur</a></li>
                         </ul>
                     </div>
                 </li>
@@ -24,17 +28,19 @@
                     <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">Cours</a>
                     <div class="dropdown-menu">
                         <ul>
+                            <li><a class="dropdown-item nav-link nav_item" href="/cours/create">Nouveau</a></li>
+
                             <li><a class="dropdown-item nav-link nav_item" href="/cours">Tous Les Cours</a></li>
                             <li class="dropdown">
                                 <a class="dropdown-item menu-link dropdown-toggler" href="#">Primaire</a>
                                 <div class="dropdown-menu">
                                     <ul>
-                                        <li><a class="dropdown-item nav-link nav_item" href="gallery-three-columns.html">CP 1</a></li>
-                                        <li><a class="dropdown-item nav-link nav_item" href="gallery-three-columns.html">CP 2</a></li>
-                                        <li><a class="dropdown-item nav-link nav_item" href="gallery-three-columns.html">CE 1</a></li>
-                                        <li><a class="dropdown-item nav-link nav_item" href="gallery-three-columns.html">CE 2</a></li>
-                                        <li><a class="dropdown-item nav-link nav_item" href="gallery-three-columns.html">CM 1</a></li>
-                                        <li><a class="dropdown-item nav-link nav_item" href="gallery-three-columns.html">CM 2</a></li>
+                                        <li><a class="dropdown-item nav-link nav_item" href="{{ route('cours.byclasse', 1) }}">CP 1</a></li>
+                                        <li><a class="dropdown-item nav-link nav_item" href="{{ route('cours.byclasse', 2) }}">CP 2</a></li>
+                                        <li><a class="dropdown-item nav-link nav_item" href="{{ route('cours.byclasse', 3) }}">CE 1</a></li>
+                                        <li><a class="dropdown-item nav-link nav_item" href="{{ route('cours.byclasse', 4) }}">CE 2</a></li>
+                                        <li><a class="dropdown-item nav-link nav_item" href="{{ route('cours.byclasse', 5) }}">CM 1</a></li>
+                                        <li><a class="dropdown-item nav-link nav_item" href="{{ route('cours.byclasse', 6) }}">CM 2</a></li>
                                     </ul>
                                 </div>
                             </li>
@@ -42,10 +48,10 @@
                                 <a class="dropdown-item menu-link dropdown-toggler" href="#">College</a>
                                 <div class="dropdown-menu">
                                     <ul>
-                                        <li><a class="dropdown-item nav-link nav_item" href="gallery-three-columns.html">6ème</a></li>
-                                        <li><a class="dropdown-item nav-link nav_item" href="gallery-three-columns.html">5ème</a></li>
-                                        <li><a class="dropdown-item nav-link nav_item" href="gallery-three-columns.html">4ème</a></li>
-                                        <li><a class="dropdown-item nav-link nav_item" href="gallery-three-columns.html">3ème</a></li>
+                                        <li><a class="dropdown-item nav-link nav_item" href="{{ route('cours.byclasse', 7) }}">6ème</a></li>
+                                        <li><a class="dropdown-item nav-link nav_item" href="{{ route('cours.byclasse', 8) }}">5ème</a></li>
+                                        <li><a class="dropdown-item nav-link nav_item" href="{{ route('cours.byclasse', 9) }}">4ème</a></li>
+                                        <li><a class="dropdown-item nav-link nav_item" href="{{ route('cours.byclasse', 10) }}">3ème</a></li>
                                     </ul>
                                 </div>
                             </li>
@@ -53,9 +59,9 @@
                                 <a class="dropdown-item menu-link dropdown-toggler" href="#">Lycée</a>
                                 <div class="dropdown-menu">
                                     <ul>
-                                        <li><a class="dropdown-item nav-link nav_item" href="gallery-three-columns.html">2nde</a></li>
-                                        <li><a class="dropdown-item nav-link nav_item" href="gallery-three-columns.html">1ère</a></li>
-                                        <li><a class="dropdown-item nav-link nav_item" href="gallery-three-columns.html">Tle</a></li>
+                                        <li><a class="dropdown-item nav-link nav_item" href="{{ route('cours.byclasse', 11) }}">2nde</a></li>
+                                        <li><a class="dropdown-item nav-link nav_item" href="{{ route('cours.byclasse', 12) }}">1ère</a></li>
+                                        <li><a class="dropdown-item nav-link nav_item" href="{{ route('cours.byclasse', 13) }}">Tle</a></li>
                                     </ul>
                                 </div>
                             </li>
@@ -63,9 +69,9 @@
                                 <a class="dropdown-item menu-link dropdown-toggler" href="#">Supérieur</a>
                                 <div class="dropdown-menu">
                                     <ul>
-                                        <li><a class="dropdown-item nav-link nav_item" href="gallery-three-columns.html">DTS</a></li>
-                                        <li><a class="dropdown-item nav-link nav_item" href="gallery-three-columns.html">Licence</a></li>
-                                        <li><a class="dropdown-item nav-link nav_item" href="gallery-three-columns.html">Master</a></li>
+                                        <li><a class="dropdown-item nav-link nav_item" href="{{ route('cours.byclasse', 14) }}">DTS</a></li>
+                                        <li><a class="dropdown-item nav-link nav_item" href="{{ route('cours.byclasse', 15) }}">Licence</a></li>
+                                        <li><a class="dropdown-item nav-link nav_item" href="{{ route('cours.byclasse', 16) }}">Master</a></li>
                                     </ul>
                                 </div>
                             </li>

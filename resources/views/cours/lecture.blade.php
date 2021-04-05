@@ -3,7 +3,7 @@
 @section('content')
 
 <!-- START SECTION BREADCRUMB -->
-<section class="page-title-light breadcrumb_section parallax_bg overlay_bg_50" data-parallax-bg-image="{{ asset('uploads/cours/cours_default.jpg') }}">
+<section class="page-title-light breadcrumb_section parallax_bg overlay_bg_50" data-parallax-bg-image="{{ asset('uploads/cours/' . $cours->image) }}">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-sm-6">
@@ -34,7 +34,14 @@
                 <div class="single_course">
                     <div class="embed-responsive embed-responsive-16by9 col-xs-12 text-center">
 
+                        <!-- TODO: lire la 1ère session du cours par défaut -->
                         <router-view ></router-view>
+
+                        <div class="enroll_btn">
+                            @can('cours-edit')
+                            <a href="#" class="btn btn-default btn-sm">Modifier</a>
+                            @endcan
+                        </div>
 
                     </div>
                     <div class="course_detail alert-warning">
@@ -48,7 +55,7 @@
                                         <img src="{{ asset('eduglobal_assets/images/user1.jpg') }}" alt="user1">
                                         <div class="instructor_info">
                                             <label>Auteur:</label>
-                                            <a href="#">Alia Noor</a>
+                                            <a href="#">{{ $cours->auteur->personne->nomComplet }}</a>
                                         </div>
                                     </div>
                                 </li>

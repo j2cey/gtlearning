@@ -60,4 +60,18 @@ class Personne extends BaseModel implements Auditable
     }
 
     #endregion
+
+    #region Accessors
+
+    /**
+     * Get the user's full name.
+     *
+     * @return string
+     */
+    public function getNomCompletAttribute()
+    {
+        return ucwords($this->nom) . " " . ucwords($this->prenom);
+    }
+
+    #endregion
 }

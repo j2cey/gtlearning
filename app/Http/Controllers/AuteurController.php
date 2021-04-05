@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Auteur;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AuteurController extends Controller
 {
@@ -15,6 +16,17 @@ class AuteurController extends Controller
     public function index()
     {
         //
+    }
+
+    public function fetch() {
+        //$auteurs = Auteur::get();
+
+        $auteurs = DB::table('auteurs')
+            ->join('personnes', 'personnes.id', '=', 'auteurs.personne_id')
+            ->select('auteurs.*', 'personnes.nom', 'personnes.prenom')
+            ->get();
+
+        return $auteurs;
     }
 
     /**

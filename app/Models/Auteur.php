@@ -28,6 +28,8 @@ class Auteur extends BaseModel implements Auditable
 
     protected $guarded = [];
 
+    protected $with = ['personne'];
+
     #region Validation Rules
 
     public static function defaultRules() {

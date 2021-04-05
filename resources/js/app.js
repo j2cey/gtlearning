@@ -102,6 +102,8 @@ Vue.component('vue-player', require('./views/sessions/Player').default);
 Vue.component('session-list', require('./views/sessions/session-list').default);
 Vue.component('session-item', require('./views/sessions/session-item').default);
 
+Vue.component('cours-create', require('./views/cours/cours-create').default);
+
 Vue.component('times-circle', require('./components/Icons/TimesCircle').default);
 Vue.component('select-angle', require('./components/Form/SelectAngle').default);
 

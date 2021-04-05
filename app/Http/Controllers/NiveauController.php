@@ -19,6 +19,15 @@ class NiveauController extends Controller
             ->with('niveaux', $niveaux);
     }
 
+    public function getById($id) {
+
+        $niveau = Niveau::where('id', $id)->first();
+
+        $niveau->load('classes');
+        return view('niveaux.show')
+            ->with('niveau', $niveau);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

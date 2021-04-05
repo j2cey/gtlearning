@@ -73,15 +73,27 @@ class TestDataSeeder extends Seeder
 
         $images_cours = [
             ['image' => "sharon-mccutcheon--juj1-lre5c-unsplash.jpg"],
-            ['image' => "eric-rothermel-FoKO4DpXamQ-unsplash.jpg"]
+            ['image' => "eric-rothermel-FoKO4DpXamQ-unsplash.jpg"],
+            ['image' => "david-travis-5bYxXawHOQg-unsplash.jpg"],
+            ['image' => "nick-morrison-FHnnjk1Yj7Y-unsplash.jpg"],
+            ['image' => "lewis-keegan-XUXfZY4dOT4-unsplash.jpg"],
+            ['image' => "martin-adams-_OZCl4XcpRw-unsplash.jpg"],
+            ['image' => "kimberly-farmer-lUaaKCUANVI-unsplash.jpg"],
+            ['image' => "haseeb-modi-CoVhe91yY0E-unsplash.jpg"],
+            ['image' => "blaire-harmon-JxA_GYxdwOA-unsplash.jpg"],
+            ['image' => "mwesigwa-joel-jHvedTh-avo-unsplash.jpg"],
+            ['image' => "angelina-litvin-K3uOmmlQmOo-unsplash.jpg"],
         ];
+
+        $image = $images_cours[rand(0, count($images_cours) - 1)];
 
         $auteur = Auteur::inRandomOrder()->first();
 
         $cours = Cours::factory()
             ->for($classe)
             ->create([
-                'auteur_id' => $auteur->id
+                'auteur_id' => $auteur->id,
+                'image' => $image['image']
             ]);
 
         $chapitres = Chapitre::factory()
@@ -90,7 +102,7 @@ class TestDataSeeder extends Seeder
             ->create();
 
         foreach ($chapitres as $chapitre) {
-            $nombre_de_session = rand(1, count($sessions_dispo_sur_vimeo));
+            $nombre_de_session = rand(1,5);//rand(1, count($sessions_dispo_sur_vimeo));
             for ($i = 0; $i < $nombre_de_session; $i++) {
                 $session = $sessions_dispo_sur_vimeo[rand(0, count($sessions_dispo_sur_vimeo) - 1)];
 

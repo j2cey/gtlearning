@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cours;
 use App\Models\Classe;
+use App\Models\Auteur;
 use Illuminate\Http\Request;
 
 class CoursController extends Controller
@@ -66,7 +67,9 @@ class CoursController extends Controller
      */
     public function create()
     {
-        //
+        $auteurs = Auteur::with('personne')->get()->pluck('personne.nomComplet', 'id');
+        $classes = Classe::get()->pluck('intitule', 'id');
+        return view('cours.create', compact('auteurs','classes'));
     }
 
     /**
