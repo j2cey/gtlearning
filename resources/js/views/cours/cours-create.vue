@@ -89,6 +89,7 @@
                             >
                         </div>
                         <p v-if="imageData" class="mb-0 text-sm font-weight-light"><small>taille: {{ (selectedFile.size/1024).toFixed(2) }} KB</small></p>
+                        <span class="invalid-feedback d-block" role="alert" v-if="coursForm.errors.has('image')" v-text="coursForm.errors.get('image')"></span>
                     </div>
                 </div>
 
@@ -192,30 +193,28 @@
                 return `${nom} ${prenom}`
             },
             createCours() {
+                this.loading = true
+
+                const fd = new FormData();
+                fd.append('image', this.selectedFile);
+
                 this.coursForm
-                    .post(`/courss`)
+                    .post(`/cours`, fd)
                     .then(data => {
-                        //window.location = '/courss'
-                        console.log("cours_created: ",data)
 
                         this.$swal({
-                            title: 'Cours successfully created !',
-                            text: 'Create a new One ?',
+                            title: 'Cours créé avec succès !',
+                            text: 'Vous êtes invité à en compléter la structure',
                             type: 'success',
                             icon: 'success',
-                            showCancelButton: true,
-                            confirmButtonText: 'Yes',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK',
                             cancelButtonText: 'No',
                             showLoaderOnConfirm: true
                         }).then((result) => {
-                            if(result.value) {
-                                this.clearForm();
-                            } else {
-                                window.location = '/courss'
-                            }
+                            window.location = '/cours'
                         })
 
-                        // eslint-disable-next-line no-unused-vars
                     }).catch(error => {
                     this.loading = false
                 });
@@ -223,36 +222,17 @@
             updateCours() {
                 this.loading = true
 
-                if (this.isSubcours) {
-
-                    this.coursForm
-                        .put(`/subcourss/${this.coursId}`, undefined)
-                        .then(data => {
-                            this.loading = false
-                            this.$swal('Cours successful updated!', '', 'success').then(() => {
-                                this.close()
-                            })
-
-                            // eslint-disable-next-line no-unused-vars
-                        }).catch(error => {
+                this.coursForm
+                    .put(`/cours/${this.coursId}`, undefined)
+                    .then(data => {
                         this.loading = false
-                    });
+                        this.$swal('Cours successful updated!', '', 'success').then(() => {
+                            this.close()
+                        })
 
-                } else {
-
-                    this.coursForm
-                        .put(`/courss/${this.coursId}`, undefined)
-                        .then(data => {
-                            this.loading = false
-                            this.$swal('Cours successful updated!', '', 'success').then(() => {
-                                this.close()
-                            })
-
-                            // eslint-disable-next-line no-unused-vars
-                        }).catch(error => {
-                        this.loading = false
-                    });
-                }
+                    }).catch(error => {
+                    this.loading = false
+                });
             },
         },
         computed: {
