@@ -26,6 +26,8 @@ class CreateCoursTable extends Migration
             $table->string('intitule')->comment('intitulé de la classe');
             $table->string('description', 500)->nullable()->comment('description de la classe');
             $table->string('image')->nullable()->comment('image de la classe');
+            $table->string('image_type')->nullable()->comment('type du fichier image');
+            $table->integer('image_size')->nullable()->comment('taille du fichier image');
 
             $table->foreignId('auteur_id')->nullable()
                 ->comment('reférence de l auteur')

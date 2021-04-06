@@ -118,9 +118,9 @@
             this.intitule = cours.intitule || ''
             this.description = cours.description || ''
             this.status = cours.status || ''
-            this.auteur = cours.auteur || ''
-            this.classe = cours.classe || ''
-            this.image = cours.image || ''
+            this.auteur = cours.auteur || null
+            this.classe = cours.classe || null
+            this.image = cours.image || null
         }
     }
     export default {

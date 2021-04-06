@@ -80,7 +80,20 @@ class CoursController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
+        $auteur = json_decode($request->auteur);
+        $classe = json_decode($request->classe);
+
+        $new_cours = new Cours();
+        $new_cours->intitule = $request->intitule;
+        $new_cours->description = $request->description;
+        $new_cours->save();
+
+        $new_cours->setAuteur($auteur->id);
+        $new_cours->setClasse($classe->id);
+
+        $new_cours->verifyAndStoreImage($request,"image", "image", "cours_files_dir");
+
+        return $new_cours;
     }
 
     /**

@@ -166,8 +166,21 @@ class Form {
             if (typeof fd !== 'undefined') {
                 //console.log('fd is not undefined', fd);
                 for (let property in this.originalData) {
-                    fd.append(property, this[property]);
+                    //fd.append(property, this[property]);
                     //console.log(property, this[property]);
+                    if (property == null) {
+                        //
+                    } else if (typeof this[property] === 'object' && this[property] !== null) {
+                        fd.append(property, JSON.stringify(this[property]));
+                    } else if (this[property] === undefined || this[property] === null || this[property] === "null") {
+                        //fd.append(property, null);
+                    } else if (this[property] === "true" || this[property] === true) {
+                        fd.append(property, true);
+                    } else if (this[property] === "false" || this[property] === false) {
+                        //fd.append(property, false);
+                    } else {
+                        fd.append(property, this[property]);
+                    }
                 }
             } else {
                 //console.log('fd is undefined', fd)

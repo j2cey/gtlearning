@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Support\Carbon;
+use App\Traits\Image\HasImageFile;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -19,6 +20,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $intitule
  * @property string $description
  * @property string $image
+ * @property string|null $image_type
+ * @property integer|null $image_size
  *
  * @property integer|null $auteur_id
  * @property integer|null $classe_id
@@ -28,7 +31,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Cours extends BaseModel implements Auditable
 {
-    use HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasImageFile, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -73,6 +76,42 @@ class Cours extends BaseModel implements Auditable
 
     public function chapitres() {
         return $this->hasMany(Chapitre::class, 'cour_id');
+    }
+
+    #endregion
+
+    #region Accessors
+
+    public function getImagePathAttribute() {
+        return asset( config('app.cours_files_dir') . '/' . $this->image);
+    }
+
+    #endregion
+
+    #region Custom Functions
+
+    public function setAuteur($id) {
+        $auteur = Auteur::where('id', $id)->first();
+        if ($auteur) {
+            $this->auteur()->associate($auteur);
+            $this->save();
+
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
+    public function setClasse($id) {
+        $classe = Classe::where('id', $id)->first();
+        if ($classe) {
+            $this->classe()->associate($classe);
+            $this->save();
+
+            return 1;
+        } else {
+            return -1;
+        }
     }
 
     #endregion

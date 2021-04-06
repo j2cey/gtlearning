@@ -41,6 +41,10 @@ return [
 
     'debug' => (bool) env('APP_DEBUG', false),
 
+    'niveaux_files_dir' => env('NIVEAUX_FILES_DIR', 'uploads/niveaux'),
+    'classes_files_dir' => env('CLASSES_FILES_DIR', 'uploads/classes'),
+    'cours_files_dir' => env('COURS_FILES_DIR', 'uploads/cours'),
+
     /*
     |--------------------------------------------------------------------------
     | Application URL

@@ -13,10 +13,10 @@ trait HasFile
      * @param $fieldname_rqst
      * @param $fieldname_db
      * @param string $directory
-     * @param string $oldimage
+     * @param string $oldfile
      * @return string|null
      */
-    public function verifyAndStoreFile( Request $request, $fieldname_rqst, $fieldname_db, $directory = 'unknown', $oldimage = ' ' ) {
+    public function verifyAndStoreFile( Request $request, $fieldname_rqst, $fieldname_db, $directory = 'unknown', $oldfile = ' ' ) {
 
         if( $request->hasFile( $fieldname_rqst ) ) {
 
@@ -30,8 +30,8 @@ trait HasFile
             $file_dir = config('app.' . $directory);
 
             // Check if the old image exists inside folder
-            if (file_exists( $file_dir . '/' . $oldimage)) {
-                unlink($file_dir . '/' . $oldimage);
+            if (file_exists( $file_dir . '/' . $oldfile)) {
+                unlink($file_dir . '/' . $oldfile);
             }
 
             // Set image name
@@ -41,11 +41,21 @@ trait HasFile
             // Move image to folder
             $file->move($file_dir, $file_name);
 
-            $this->update([
+            $data_to_update = [$fieldname_db => $file_name];
+            if (isset($this->{$fieldname_db . '_size'})) {
+                $data_to_update[$fieldname_db . '_size'] = $file->getSize();
+            }
+            if (isset($this->{$fieldname_db . '_type'})) {
+                $data_to_update[$fieldname_db . '_type'] = $file->getClientOriginalExtension();
+            }
+
+            $this->update($data_to_update);
+
+            /*$this->update([
                 $fieldname_db => $file_name,
                 $fieldname_db . '_size' => $file->getSize(),
                 $fieldname_db . '_type' => $file->getClientOriginalExtension(),
-            ]);
+            ]);*/
 
             return $file_name;
         }
