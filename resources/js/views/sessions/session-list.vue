@@ -1,23 +1,17 @@
 <template>
     <div class="container">
+
         <table class="table table-hover table-sm">
             <tbody>
 
-                <tr v-for="(session, key) in sessions">
-
+                <tr v-for="(session, index) in sessions" v-if="sessions">
                     <td>
-                        <h5>
-                          <span>
-                            <small><span class="badge badge-success" style="vertical-align: top">{{ key + 1 }}. </span></small>
-                            <a href="#" @click.prevent="lireSession(session)">{{ session.intitule }}</a>
-                          </span>
-                        </h5>
-                        <p>{{ session.description }}</p>
+                        <small>{{ session.intitule }}</small>
                     </td>
-
                     <td>
-                        <label><i class="fa fa-file-video-o mr-0"></i></label>
-                        <p></p>
+                        <small>
+                            <span class="badge badge-info"><span class="fa fa-clock"></span> {{ session.duree_mm + ':' + session.duree_ss }} </span>
+                        </small>
                     </td>
                 </tr>
 
@@ -84,7 +78,7 @@
             })
         },
         components: {
-            "creer-session": require('./children/CreerSession.vue').default
+            "creer-session": require('./session-create').default
         },
         computed: {
 

@@ -1,5 +1,6 @@
 import VueRouter from 'vue-router';
-
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css';
 
 let routes = [
     {
@@ -26,12 +27,36 @@ let routes = [
         name: 'sessions.play',
         path: '/sessions/play/:id',
         component: () => import('./views/sessions/reader')
+    },
+    {
+        name: 'cours.create',
+        path: '/cours/create',
+        component: () => import('./views/cours/cours-createform')
+    },
+    {
+        name: 'cours.edit',
+        path: '/cours/:id/edit',
+        component: () => import(/*webpackChunkName: "cours.edit"*/ './views/cours/cours-edit')
     }
 ];
 
-export default new VueRouter({
+const router = new VueRouter({
     base: '/',
     mode: 'history',
     routes,
     linkActiveClass: 'active'
 });
+
+router.beforeResolve((to, from, next) => {
+    if (to.name) {
+        // Start loading display
+        NProgress.start()
+    }
+    next()
+});
+router.afterEach(() => {
+    // End loading display
+    NProgress.done()
+});
+
+export default router;

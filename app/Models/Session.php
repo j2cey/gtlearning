@@ -66,4 +66,20 @@ class Session extends BaseModel implements Auditable
     }
 
     #endregion
+
+    #region Custom Functions
+
+    public function setChapitre($id) {
+        $chapitre = Chapitre::where('id', $id)->first();
+        if ($chapitre) {
+            $this->chapitre()->associate($chapitre);
+            $this->save();
+
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
+    #endregion
 }

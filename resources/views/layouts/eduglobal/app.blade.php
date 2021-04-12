@@ -83,6 +83,7 @@
 
 <div id="app">
     @yield('content')
+    <vue-noty></vue-noty>
 </div>
 
 

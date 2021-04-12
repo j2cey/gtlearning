@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\File\HasFile;
 use Illuminate\Support\Carbon;
-use App\Traits\Image\HasImageFile;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -19,9 +19,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property string $intitule
  * @property string $description
- * @property string $image
- * @property string|null $image_type
- * @property integer|null $image_size
  *
  * @property integer|null $auteur_id
  * @property integer|null $classe_id
@@ -31,11 +28,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Cours extends BaseModel implements Auditable
 {
-    use HasFactory, HasImageFile, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasFile, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
-    protected $with = ['auteur','classe','chapitres'];
+    protected $with = ['auteur','classe','chapitres','imagecours'];
 
     #region Validation Rules
 
@@ -76,6 +73,11 @@ class Cours extends BaseModel implements Auditable
 
     public function chapitres() {
         return $this->hasMany(Chapitre::class, 'cour_id');
+    }
+
+    public function imagecours() {
+        return $this->file()
+            ->where('role', "image_cours");
     }
 
     #endregion

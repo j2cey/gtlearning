@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\File;
 use App\Models\Cours;
 use App\Models\Auteur;
 use App\Models\Classe;
@@ -72,17 +73,17 @@ class TestDataSeeder extends Seeder
         ];
 
         $images_cours = [
-            ['image' => "sharon-mccutcheon--juj1-lre5c-unsplash.jpg"],
-            ['image' => "eric-rothermel-FoKO4DpXamQ-unsplash.jpg"],
-            ['image' => "david-travis-5bYxXawHOQg-unsplash.jpg"],
-            ['image' => "nick-morrison-FHnnjk1Yj7Y-unsplash.jpg"],
-            ['image' => "lewis-keegan-XUXfZY4dOT4-unsplash.jpg"],
-            ['image' => "martin-adams-_OZCl4XcpRw-unsplash.jpg"],
-            ['image' => "kimberly-farmer-lUaaKCUANVI-unsplash.jpg"],
-            ['image' => "haseeb-modi-CoVhe91yY0E-unsplash.jpg"],
-            ['image' => "blaire-harmon-JxA_GYxdwOA-unsplash.jpg"],
-            ['image' => "mwesigwa-joel-jHvedTh-avo-unsplash.jpg"],
-            ['image' => "angelina-litvin-K3uOmmlQmOo-unsplash.jpg"],
+            ['name' => "sharon-mccutcheon--juj1-lre5c-unsplash.jpg", 'type' => "image/jpeg", 'extension' => "jpg", 'size' => 374109],
+            ['name' => "eric-rothermel-FoKO4DpXamQ-unsplash.jpg", 'type' => "image/jpeg", 'extension' => "jpg", 'size' => 221823],
+            ['name' => "david-travis-5bYxXawHOQg-unsplash.jpg", 'type' => "image/jpeg", 'extension' => "jpg", 'size' => 152126],
+            ['name' => "nick-morrison-FHnnjk1Yj7Y-unsplash.jpg", 'type' => "image/jpeg", 'extension' => "jpg", 'size' => 231769],
+            ['name' => "lewis-keegan-XUXfZY4dOT4-unsplash.jpg", 'type' => "image/jpeg", 'extension' => "jpg", 'size' => 327848],
+            ['name' => "martin-adams-_OZCl4XcpRw-unsplash.jpg", 'type' => "image/jpeg", 'extension' => "jpg", 'size' => 524560],
+            ['name' => "kimberly-farmer-lUaaKCUANVI-unsplash.jpg", 'type' => "image/jpeg", 'extension' => "jpg", 'size' => 175913],
+            ['name' => "haseeb-modi-CoVhe91yY0E-unsplash.jpg", 'type' => "image/jpeg", 'extension' => "jpg", 'size' => 255846],
+            ['name' => "blaire-harmon-JxA_GYxdwOA-unsplash.jpg", 'type' => "image/jpeg", 'extension' => "jpg", 'size' => 258746],
+            ['name' => "mwesigwa-joel-jHvedTh-avo-unsplash.jpg", 'type' => "image/jpeg", 'extension' => "jpg", 'size' => 244342],
+            ['name' => "angelina-litvin-K3uOmmlQmOo-unsplash.jpg", 'type' => "image/jpeg", 'extension' => "jpg", 'size' => 185915],
         ];
 
         $image = $images_cours[rand(0, count($images_cours) - 1)];
@@ -92,9 +93,19 @@ class TestDataSeeder extends Seeder
         $cours = Cours::factory()
             ->for($classe)
             ->create([
-                'auteur_id' => $auteur->id,
-                'image' => $image['image']
+                'auteur_id' => $auteur->id
             ]);
+
+        File::create([
+            'config_dir' => "cours_files_dir",
+            'model_type' => "App\Models\Cours",
+            'model_id' => $cours['id'],
+            'name' => $image['name'],
+            'role' => "image_cours",
+            'type' => $image['type'],
+            'size' => $image['size'],
+            'extension' => $image['extension'],
+        ]);
 
         $chapitres = Chapitre::factory()
             ->count($nombre_de_chapitres)
@@ -102,7 +113,7 @@ class TestDataSeeder extends Seeder
             ->create();
 
         foreach ($chapitres as $chapitre) {
-            $nombre_de_session = rand(1,5);//rand(1, count($sessions_dispo_sur_vimeo));
+            $nombre_de_session = rand(1,5);
             for ($i = 0; $i < $nombre_de_session; $i++) {
                 $session = $sessions_dispo_sur_vimeo[rand(0, count($sessions_dispo_sur_vimeo) - 1)];
 

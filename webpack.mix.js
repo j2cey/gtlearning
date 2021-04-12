@@ -20,5 +20,6 @@ mix.js('resources/js/app.js', 'public/js')
         processCssUrls: false,
         postCss: postCssConfig
     })
+    .copy('node_modules/@fortawesome/fontawesome-free/webfonts', 'public/webfonts');
+    //.copy('node_modules/@fortawesome/fontawesome-free/webfonts', 'public/fonts/font-awesome');
 ;
- //   .copy('node_modules/@fortawesome/fontawesome-free/webfonts', 'public/fonts/font-awesome');

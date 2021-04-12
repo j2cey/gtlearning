@@ -3,20 +3,34 @@
 namespace App\Traits\File;
 
 use SplFileInfo;
+use App\Models\File;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 
 trait HasFile
 {
+    public function files() {
+        $elem_type = get_called_class();
+        return $this->hasMany(File::class, 'model_id', 'id')
+            ->where('model_type', $elem_type)
+            ;
+    }
+
+    public function file() {
+        $elem_type = get_called_class();
+        return $this->hasOne(File::class, 'model_id', 'id')
+            ->where('model_type', $elem_type)->oldest()
+            ;
+    }
+
     /**
      * @param Request $request
      * @param $fieldname_rqst
-     * @param $fieldname_db
+     * @param $file_role
      * @param string $directory
      * @param string $oldfile
      * @return string|null
      */
-    public function verifyAndStoreFile( Request $request, $fieldname_rqst, $fieldname_db, $directory = 'unknown', $oldfile = ' ' ) {
+    public function verifyAndStoreFile( Request $request, $fieldname_rqst, $file_role, $directory = 'unknown', $oldfile = ' ' ) {
 
         if( $request->hasFile( $fieldname_rqst ) ) {
 
@@ -34,6 +48,8 @@ trait HasFile
                 unlink($file_dir . '/' . $oldfile);
             }
 
+            $elem_type = get_called_class();
+
             // Set image name
             $file = $request->file($fieldname_rqst);//$request->image;
             $file_name = md5($directory . '_' . time()) . '.' . $file->getClientOriginalExtension();
@@ -41,23 +57,18 @@ trait HasFile
             // Move image to folder
             $file->move($file_dir, $file_name);
 
-            $data_to_update = [$fieldname_db => $file_name];
-            if (isset($this->{$fieldname_db . '_size'})) {
-                $data_to_update[$fieldname_db . '_size'] = $file->getSize();
-            }
-            if (isset($this->{$fieldname_db . '_type'})) {
-                $data_to_update[$fieldname_db . '_type'] = $file->getClientOriginalExtension();
-            }
+            $file = File::create([
+                'config_dir' => $directory,
+                'model_type' => $elem_type,
+                'model_id' => $this->id,
+                'name' => $file_name,
+                'role' => $file_role,
+                'type' => $file->getClientMimeType(),
+                'size' => $file->getSize(),
+                'extension' => $file->getClientOriginalExtension(),
+            ]);
 
-            $this->update($data_to_update);
-
-            /*$this->update([
-                $fieldname_db => $file_name,
-                $fieldname_db . '_size' => $file->getSize(),
-                $fieldname_db . '_type' => $file->getClientOriginalExtension(),
-            ]);*/
-
-            return $file_name;
+            return $file;
         }
 
         return -1;

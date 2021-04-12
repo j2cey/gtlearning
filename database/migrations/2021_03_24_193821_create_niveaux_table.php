@@ -25,9 +25,6 @@ class CreateNiveauxTable extends Migration
 
             $table->string('intitule')->comment('intitulé du niveau');
             $table->integer('level')->default(0)->comment('level du niveau');
-            $table->string('image')->nullable()->comment('image du niveau');
-            $table->string('image_type')->nullable()->comment('type du fichier image');
-            $table->integer('image_size')->nullable()->comment('taille du fichier image');
             $table->string('description', 500)->nullable()->comment('description du niveau');
         });
         $this->setTableComment($this->table_name,$this->table_comment);

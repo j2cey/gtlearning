@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\File\HasFile;
 use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,7 +19,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property string $intitule
  * @property string $level
- * @property string $image
  * @property string $description
  *
  * @property Carbon $created_at
@@ -26,9 +26,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Niveau extends BaseModel implements Auditable
 {
-    use HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasFile, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
+
+    protected $with = ['imageniveau'];
 
     #region Validation Rules
 
@@ -61,6 +63,11 @@ class Niveau extends BaseModel implements Auditable
 
     public function classes() {
         return $this->hasMany(Classe::class, 'niveau_id');
+    }
+
+    public function imageniveau() {
+        return $this->file()
+            ->where('role', "image_niveau");
     }
 
     #endregion

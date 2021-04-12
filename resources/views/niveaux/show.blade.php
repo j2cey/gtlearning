@@ -3,7 +3,7 @@
 @section('content')
 
     <!-- START SECTION BREADCRUMB -->
-    <section class="page-title-light breadcrumb_section parallax_bg overlay_bg_50" data-parallax-bg-image="{{ asset('uploads/niveaux/' . $niveau->image) }}">
+    <section class="page-title-light breadcrumb_section parallax_bg overlay_bg_50" data-parallax-bg-image="{{ $niveau->imageniveau->fullpath }}">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-sm-6">
@@ -50,7 +50,7 @@
                                 <div class="col-md-6">
                                     <div class="content_box box_shadow1 animation" data-animation="fadeInUp" data-animation-delay="0.02s">
                                         <div class="content_img">
-                                            <a href="#"><img style="height: 160px; width: 280px" src="{{ asset('uploads/classes/' . $classe->image) }}" alt="course_img1"/></a>
+                                            <a href="#"><img style="height: 160px; width: 280px" src="{{ $classe->imageclasse->fullpath }}" alt="course_img1"/></a>
                                         </div>
                                         <div class="content_desc">
                                             <h4 class="content_title"><a href="{{ route('cours.byclasse', $classe->id) }}">{{ $classe->intitule }}</a></h4>

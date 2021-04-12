@@ -71,4 +71,31 @@ class Chapitre extends BaseModel implements Auditable
     }
 
     #endregion
+
+    #region Custom Functions
+
+    public function setCours($id) {
+        $cours = Cours::where('id', $id)->first();
+        if ($cours) {
+            $this->cours()->associate($cours);
+            $this->save();
+
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
+    public static function boot ()
+    {
+        parent::boot();
+
+        // juste avant suppression
+        self::deleting(function($model){
+            //On supprime toutes les sessions
+            $model->sessions()->get(['id'])->each->delete();
+        });
+    }
+
+    #endregion
 }

@@ -35,7 +35,14 @@ class ChapitreController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $new_chapitre = new Chapitre();
+        $new_chapitre->intitule = $request->intitule;
+        $new_chapitre->description = $request->description;
+        $new_chapitre->save();
+
+        $new_chapitre->setCours($request->cour_id);
+
+        return $new_chapitre;
     }
 
     /**
@@ -69,7 +76,11 @@ class ChapitreController extends Controller
      */
     public function update(Request $request, Chapitre $chapitre)
     {
-        //
+        $chapitre->intitule = $request->intitule;
+        $chapitre->description = $request->description;
+        $chapitre->save();
+
+        return $chapitre;
     }
 
     /**
@@ -80,6 +91,8 @@ class ChapitreController extends Controller
      */
     public function destroy(Chapitre $chapitre)
     {
-        //
+        $chapitre->delete();
+
+        return response()->json(['status' => 'ok'], 200);
     }
 }

@@ -41,9 +41,14 @@ return [
 
     'debug' => (bool) env('APP_DEBUG', false),
 
+    'temp_files_dir' => env('TEMP_FILES_DIR', 'uploads/temp'),
     'niveaux_files_dir' => env('NIVEAUX_FILES_DIR', 'uploads/niveaux'),
     'classes_files_dir' => env('CLASSES_FILES_DIR', 'uploads/classes'),
     'cours_files_dir' => env('COURS_FILES_DIR', 'uploads/cours'),
+
+    'vimeo_client_id' => env('VIMEO_CLIENT_ID', 'vimeo_client_id'),
+    'vimeo_client_secret' => env('VIMEO_CLIENT_SECRET', 'vimeo_client_secret'),
+    'vimeo_access_token' => env('VIMEO_ACCESS_TOKEN', 'vimeo_access_token'),
 
     /*
     |--------------------------------------------------------------------------

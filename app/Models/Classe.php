@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\File\HasFile;
 use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +20,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $intitule
  * @property string $sigle
  * @property string $description
- * @property string $image
  *
  * @property integer|null $niveau_id
  *
@@ -28,9 +28,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Classe extends BaseModel implements Auditable
 {
-    use HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasFile, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
+
+    protected $with = ['imageclasse'];
 
     #region Validation Rules
 
@@ -67,6 +69,11 @@ class Classe extends BaseModel implements Auditable
 
     public function cours() {
         return $this->hasMany(Cours::class, 'classe_id');
+    }
+
+    public function imageclasse() {
+        return $this->file()
+            ->where('role', "image_classe");
     }
 
     #endregion

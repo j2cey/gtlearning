@@ -91,7 +91,7 @@ class CoursController extends Controller
         $new_cours->setAuteur($auteur->id);
         $new_cours->setClasse($classe->id);
 
-        $new_cours->verifyAndStoreImage($request,"image", "image", "cours_files_dir");
+        $new_cours->verifyAndStoreFile($request,"imagecours", "image_cours", "cours_files_dir");
 
         return $new_cours;
     }
@@ -107,15 +107,20 @@ class CoursController extends Controller
         //
     }
 
+    public function getById($id) {
+        $cours = Cours::where('id', $id)->first();
+        return $cours->load('chapitres');
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Cours  $cours
      * @return \Illuminate\Http\Response
      */
-    public function edit(Cours $cours)
+    public function edit(Cours $cour)
     {
-        //
+        return view('cours.edit', compact('cour'));
     }
 
     /**

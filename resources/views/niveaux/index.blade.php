@@ -45,7 +45,7 @@
                     <div class="col-lg-4 col-sm-6">
                         <div class="content_box event_box radius_all_10 box_shadow1 animation" data-animation="fadeInUp" data-animation-delay="0.02s">
                             <div class="content_img radius_ltrt_10">
-                                <a href="{{ route('niveaux.show', $niveau->uuid) }}"><img src="{{ asset('uploads/niveaux/' . $niveau->image) }}" alt="event_img4"/></a>
+                                <a href="{{ route('niveaux.show', $niveau->uuid) }}"><img src="{{ $niveau->imageniveau->fullpath }}" alt="event_img4"/></a>
                             </div>
                             <div class="content_desc">
                                 <h4 class="content_title"><a href="{{ route('niveaux.show', $niveau->uuid) }}">{{ $niveau->intitule }}</a></h4>
