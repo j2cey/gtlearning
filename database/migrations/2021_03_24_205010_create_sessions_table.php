@@ -24,10 +24,7 @@ class CreateSessionsTable extends Migration
             $table->baseFields();
 
             $table->string('intitule')->comment('intitulé de la session');
-            $table->integer('lien')->nullable()->comment('lien de la vidéo');
             $table->integer('posi')->nullable()->comment('numéro d ordre de la session');
-            $table->integer('duree_mm')->default(0)->comment('durrée de la session (nombre de minutes)');
-            $table->integer('duree_ss')->default(0)->comment('durrée de la session (nombre de secondes)');
             $table->string('description', 500)->nullable()->comment('description du chapitre');
 
             $table->foreignId('chapitre_id')->nullable()

@@ -25,8 +25,9 @@ class SettingSeeder extends Seeder
         $group = $this->createNew("uploads", $group->id, null, null, ",", "Uploads.");
         // sub groupe files.uploads.max_size
         $group = $this->createNew("max_size", $group->id, null, null, ",", "Max Size.");
-        $this->createNew("any", $group->id, "70", "integer", ",", "Max any file size.");
-        $this->createNew("video", $group->id, "70", "integer", ",", "Max video file size.");
+        $this->createNew("any", $group->id, "70", "integer", ",", "Any file Max size.");
+        $this->createNew("image", $group->id, "5", "integer", ",", "Image file Max size.");
+        $this->createNew("video", $group->id, "70", "integer", ",", "Video file Max size.");
     }
 
     private function createNew($name, $group_id = null, $value = null, $type = null, $array_sep = ",", $description = null)

@@ -40,8 +40,10 @@ Route::resource('cours', CoursController::class);
 Route::get('cours.byclasse/{classeid}', [CoursController::class, 'getByClasse'])->name('cours.byclasse');
 Route::get('cours.lecture/{coursid}', [CoursController::class, 'lecture'])->name('cours.lecture');
 Route::get('cours.byid/{id}', [CoursController::class, 'getById']);
+Route::get('cours.byauteur/{auteurid}', [CoursController::class, 'getByAuteur'])->name('cours.byauteur');
 
 Route::resource('chapitres', ChapitreController::class);
+Route::get('chapitres.byid/{id}', [ChapitreController::class, 'getById'])->name('chapitres.byid');
 
 Route::resource('sessions', SessionController::class);
 Route::get('sessions.byid/{id}', [SessionController::class, 'getById']);

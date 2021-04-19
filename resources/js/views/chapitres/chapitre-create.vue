@@ -1,5 +1,8 @@
 <template>
     <div class="modal fade draggable" id="addUpdateChapitre" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="loader" v-if="loading">
+            <span class="helper"></span>
+        </div>
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -129,5 +132,40 @@
 </script>
 
 <style scoped>
+    #addUpdateChapitre {
+        /* Components Root Element ID */
+        position:  fixed;
+        width: 600px;
+        top: 40px;
+        left: calc(50% - 300px);
+        bottom: 40px;
+    }
+    .loader {
+        /* Loader Div Class */
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #eceaea;
+        background-image: url("../assets/ajax-loader.gif");
+        background-size: 50px;
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40);
+    }
 
+    .helper {
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+    }
+
+    .loaderImg {
+        vertical-align: middle;
+        max-height: 100px;
+        max-width: 160px;
+    }
 </style>

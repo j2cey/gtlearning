@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Http\Request;
+use App\Traits\File\HasFiles;
 use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,14 +25,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $adresse
  * @property string $telephone
  * @property string $fonction
- * @property string $image
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
 class Personne extends BaseModel implements Auditable
 {
-    use HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasFiles, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -71,6 +72,36 @@ class Personne extends BaseModel implements Auditable
     public function getNomCompletAttribute()
     {
         return ucwords($this->nom) . " " . ucwords($this->prenom);
+    }
+
+    #endregion
+
+    #region Eloquent Relationships
+
+    public function imagepersonne() {
+        return $this->file()
+            ->where('role', "image_personne");
+    }
+
+    #endregion
+
+    #region Scopes
+
+    public function scopeSearch($query, $q) {
+        if ($q == null) return $query;
+
+        return $query
+            ->where('nom', 'LIKE', "%{$q}%")
+            ->orWhere('prenom', 'LIKE', "%{$q}%")
+            ;
+    }
+
+    #endregion
+
+    #region Custom Functions
+
+    public function setImagepersonne( Request $request, $fieldname_rqst, File $curr_file = null ) {
+        return $this->verifyAndStoreFile($request, $fieldname_rqst, "image_personne", "personnes_files_dir", $curr_file = null );
     }
 
     #endregion

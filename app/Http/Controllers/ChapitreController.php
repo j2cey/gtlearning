@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Chapitre;
 use Illuminate\Http\Request;
+use App\Http\Requests\Chapitre\UpdateChapitreRequest;
+use App\Http\Requests\Chapitre\CreateChapitreRequest;
 
 class ChapitreController extends Controller
 {
@@ -15,6 +17,11 @@ class ChapitreController extends Controller
     public function index()
     {
         //
+    }
+
+    public function getById($id) {
+        $chapitre = Chapitre::where('id', $id)->first();
+        return $chapitre->load('sessions');
     }
 
     /**
@@ -30,10 +37,10 @@ class ChapitreController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param CreateChapitreRequest $request
+     * @return Chapitre
      */
-    public function store(Request $request)
+    public function store(CreateChapitreRequest $request)
     {
         $new_chapitre = new Chapitre();
         $new_chapitre->intitule = $request->intitule;
@@ -70,11 +77,11 @@ class ChapitreController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Chapitre  $chapitre
-     * @return \Illuminate\Http\Response
+     * @param UpdateChapitreRequest $request
+     * @param \App\Models\Chapitre $chapitre
+     * @return Chapitre
      */
-    public function update(Request $request, Chapitre $chapitre)
+    public function update(UpdateChapitreRequest $request, Chapitre $chapitre)
     {
         $chapitre->intitule = $request->intitule;
         $chapitre->description = $request->description;

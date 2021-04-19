@@ -24,16 +24,16 @@ class CreateCoursTable extends Migration
             $table->baseFields();
 
             $table->string('intitule')->comment('intitulé de la classe');
-            $table->string('description', 500)->nullable()->comment('description de la classe');
+            $table->text('description')->nullable()->comment('description de la classe');
 
             $table->foreignId('auteur_id')->nullable()
                 ->comment('reférence de l auteur')
-                ->constrained('auteurs')->onDelete('set null');
+                ->constrained('auteurs')->onDelete('RESTRICT');
 
             //TODO: un cours peut appartenir à plusieurs classes
             $table->foreignId('classe_id')->nullable()
                 ->comment('reférence de la classe')
-                ->constrained('classes')->onDelete('set null');
+                ->constrained('classes')->onDelete('RESTRICT');
         });
         $this->setTableComment($this->table_name,$this->table_comment);
     }

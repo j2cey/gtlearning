@@ -1,7 +1,10 @@
 <template>
-    <div class="modal fade draggable" id="addUpdateSession" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addUpdateSession" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="loader" v-if="loading">
+            <span class="helper"></span>
+        </div>
         <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+            <div class="modal-content" id="axiosForm">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel" v-if="editing">Modifer Session</h5>
                     <h5 class="modal-title" id="exampleModalLabel" v-else>Céer Nouvelle Session</h5>
@@ -32,10 +35,10 @@
                             </div>
 
                             <div class="form-group input-group file-group">
-                                <label for="lien_video" class="col-sm-2 col-form-label text-sm text-left">Vidéo</label>
+                                <label for="videosession" class="col-sm-2 col-form-label text-sm text-left">Vidéo</label>
                                 <div class="col-sm-10">
-                                    <input type="file" name="lien_video" id="lien_video" ref="lien_video" @change="handleFile" multiple>
-                                    <p class="text-sm-left"><small class="text text-danger" role="alert" v-if="sessionForm.errors.has('lien_video')" v-text="sessionForm.errors.get('lien_video')"></small></p>
+                                    <input type="file" name="videosession" id="videosession" ref="lien_video" @change="handleFile" multiple>
+                                    <p class="text-sm-left"><small class="text text-danger" role="alert" v-if="sessionForm.errors.has('video_file')" v-text="sessionForm.errors.get('video_file')"></small></p>
                                 </div>
                             </div>
 
@@ -65,6 +68,7 @@
             this.description = session.description || ''
             this.posi = session.posi || ''
             this.chapitre_id = session.chapitre_id || ''
+            this.videosession = session.videosession || ''
         }
     }
     export default {
@@ -124,8 +128,18 @@
             },
             updateSession(chapitreId) {
                 this.loading = true
+
+                var fd = new FormData();
+
+                if ( typeof this.selectedVideo === 'undefined' || this.selectedVideo === null) {
+                    fd = undefined
+                } else {
+                    fd = new FormData();
+                    fd.append('video_file', this.selectedVideo);
+                }
+
                 this.sessionForm
-                    .put(`/sessions/${this.sessionId}`, undefined)
+                    .put(`/sessions/${this.sessionId}`, fd)
                     .then(session => {
                         this.loading = false
                         SessionBus.$emit('session_updated', {session, chapitreId})
@@ -138,6 +152,10 @@
         computed: {
             isValidCreateForm() {
                 return this.sessionForm.intitule && this.sessionForm.description && !this.loading
+            },
+
+            isLoading() {
+                return this.loading;
             }
         }
     }
@@ -145,4 +163,40 @@
 
 <style scoped>
 
+    #addUpdateSession {
+        /* Components Root Element ID */
+        position:  fixed;
+        width: 600px;
+        top: 40px;
+        left: calc(50% - 300px);
+        bottom: 40px;
+    }
+    .loader {
+        /* Loader Div Class */
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #eceaea;
+        background-image: url("../assets/ajax-loader.gif");
+        background-size: 50px;
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40);
+    }
+
+    .helper {
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+    }
+
+    .loaderImg {
+        vertical-align: middle;
+        max-height: 100px;
+        max-width: 160px;
+    }
 </style>

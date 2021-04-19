@@ -29,6 +29,7 @@ class CreateFilesTable extends Migration
             $table->integer('size')->nullable()->comment('file size');
             $table->string('extension')->nullable()->comment('file extension');
             $table->string('config_dir')->nullable()->comment('app config entry');
+            $table->boolean('rawfiledeleted')->default(false)->comment('determine whether the raw (physical) file is deleted');
 
             $table->string('model_type')->nullable()->comment('type of referenced model');
             $table->bigInteger('model_id')->nullable()->comment('model reference');

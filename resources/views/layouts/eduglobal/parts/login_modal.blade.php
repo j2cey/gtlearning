@@ -15,42 +15,30 @@
                                 <li class="nav-item">
                                     <a class="nav-link active" id="login-tab1" data-toggle="tab" href="#login" role="tab" aria-controls="login" aria-selected="true">Login</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="signup-tab1" data-toggle="tab" href="#signup" role="tab" aria-controls="signup" aria-selected="false">Sign Up</a>
-                                </li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane fade show active" id="login" role="tabpanel">
-                                    <div class="heading_s1 mb-3">
-                                        <h4>Login</h4>
-                                    </div>
-                                    <form method="post" class="login form_style2">
+                                    <form method="POST" class="login form_style2" action="{{ route('login') }}">
+                                        @csrf
                                         <div class="form-group">
                                             <input type="text" required="" class="form-control" name="email" placeholder="Email">
                                         </div>
                                         <div class="form-group">
-                                            <input class="form-control" required="" type="password" name="password" placeholder="Password">
+                                            <input class="form-control" required="" type="password" name="password" placeholder="Mot de Passe">
                                         </div>
                                         <div class="login_footer form-group">
-                                            <a href="#">Lost your password?</a>
+                                            <a href="#">Mot de passe oublié?</a>
                                             <div class="chek-form mb-3">
                                                 <div class="custome-checkbox">
                                                     <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox3" value="">
-                                                    <label class="form-check-label" for="exampleCheckbox3">Remember me</label>
+                                                    <label class="form-check-label" for="exampleCheckbox3">Se souvenir de moi</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <button type="submit" class="btn btn-default btn-block rounded-0" name="login">Log in</button>
+                                            <button type="submit" class="btn btn-default btn-block rounded-0" name="login">Valider</button>
                                         </div>
                                     </form>
-                                    <div class="different_login">
-                                        <span> or</span>
-                                    </div>
-                                    <ul class="btn-login list_none text-center">
-                                        <li><a href="#" class="btn btn-facebook rounded-0"><i class="ion-social-facebook"></i>Facebook</a></li>
-                                        <li><a href="#" class="btn btn-google rounded-0"><i class="ion-social-googleplus"></i>Google</a></li>
-                                    </ul>
                                 </div>
                                 <div class="tab-pane fade" id="signup" role="tabpanel">
                                     <div class="heading_s1 mb-3">
@@ -73,13 +61,6 @@
                                             <button type="submit" class="btn btn-default btn-block rounded-0" name="login">Sign Up</button>
                                         </div>
                                     </form>
-                                    <div class="different_login">
-                                        <span> or</span>
-                                    </div>
-                                    <ul class="btn-login list_none text-center">
-                                        <li><a href="#" class="btn btn-facebook rounded-0"><i class="ion-social-facebook"></i>Facebook</a></li>
-                                        <li><a href="#" class="btn btn-google rounded-0"><i class="ion-social-googleplus"></i>Google</a></li>
-                                    </ul>
                                 </div>
                             </div>
                         </div>

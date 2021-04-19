@@ -3,7 +3,7 @@
 @section('content')
 
 <!-- START SECTION BREADCRUMB -->
-<section class="page-title-light breadcrumb_section parallax_bg overlay_bg_50" data-parallax-bg-image="{{ asset('uploads/cours/' . $cours->image) }}">
+<section class="page-title-light breadcrumb_section parallax_bg overlay_bg_50" data-parallax-bg-image="{{ $cours->imagecours->fullpath }}">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-sm-6">
@@ -123,7 +123,7 @@
                                                     @endif
                                                 </h6>
                                                 <small>
-                                                    <span class="item_meta duration">30 min</span>
+                                                    <span class="item_meta duration">{{ $chapitre->duree }}</span>
                                                 </small>
                                             </div>
                                             @if ($loop->first)
@@ -139,13 +139,13 @@
                                                         @forelse ($chapitre->sessions as $session)
                                                             <tr>
                                                                 <td>
-                                                                    <router-link tag="a" to="/sessions/play/{{$session->lien}}" class="nav-link">
+                                                                    <router-link tag="a" to="/sessions/play/{{$session->videosession->video_id}}" class="nav-link">
                                                                         <small>{{ $session->intitule }}</small>
                                                                     </router-link>
                                                                 </td>
                                                                 <td>
                                                                     <small>
-                                                                    <span class="badge badge-info"><span class="fa fa-clock"></span> {{ $session->duree_mm }}:{{ $session->duree_ss }}</span>
+                                                                    <span class="badge badge-info"><span class="fa fa-clock"></span> {{ $session->videosession->duration_mm }}:{{ $session->videosession->duration_ss }}</span>
                                                                     </small>
                                                                 </td>
                                                             </tr>

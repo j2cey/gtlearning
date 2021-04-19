@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\File\HasFile;
+use App\Traits\File\HasFiles;
 use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Niveau extends BaseModel implements Auditable
 {
-    use HasFactory, HasFile, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasFiles, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -71,4 +71,15 @@ class Niveau extends BaseModel implements Auditable
     }
 
     #endregion
+
+    public static function boot ()
+    {
+        parent::boot();
+
+        // juste avant suppression
+        self::deleting(function($model){
+            //On supprime toutes les classes
+            $model->classes()->get(['id'])->each->delete();
+        });
+    }
 }

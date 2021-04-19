@@ -17,7 +17,22 @@
                         <li><a href="#"><i class="ion-social-instagram-outline"></i></a></li>
                     </ul>
                     <ul class="list_none header_list border_list ml-1">
-                        <li><a href="#" data-toggle="modal" data-target="#Login">Login</a></li>
+                        @auth
+                            <li>
+                                <a href="#">Salut <strong>{{ auth()->user()->name  }}</strong></a>
+                            </li>
+                            <li>
+                                <a href="javascript:{}" onclick="document.getElementById('logout-form').submit();">Déconnexion</a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf<a href="{{ route('login') }}">{{ __('Login') }}</a>
+                                </form>
+                            </li>
+                        @endauth
+
+                        @guest
+{{--                                <li><a href="#" data-toggle="modal" data-target="#Login">Login</a></li>--}}
+                                <li><a href="javascript:;" data-toggle="modal" data-target="#loginModal">Se Connecter</a></li>
+                        @endguest
                     </ul>
                 </div>
             </div>

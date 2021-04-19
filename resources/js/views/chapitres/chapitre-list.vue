@@ -16,38 +16,20 @@
                     </h6>
                     <small>
                         <span class="item_meta duration text-sm">
-                            30
+                            {{ chapitre.duree }}
                         </span>
                     </small>
                 </div>
                 <div :id="'clpse-chap-'+chapitre.id" class="collapse" :aria-labelledby="'heading-chap-'+chapitre.id" data-parent="#accordion-chap">
                     <div class="card-body">
                         <p class="small">{{ chapitre.description }}</p>
-
-                        <p class="">
-                            <small>
-                                <span class="badge badge-primary">
-                                    <a @click="editChapitre(chapitre)">
-                                        <i class="fa fa-check" aria-hidden="true"></i> Chapitre
-                                    </a>
-                                </span>
-                            </small>
-
-                            <small>
-                                <span class="badge badge-danger">
-                                    <a @click="deleteChapitre(chapitre, index)">
-                                        <i class="fa fa-minus" aria-hidden="true"></i> Chapitre
-                                    </a>
-                                </span>
-                            </small>
-
-                            <small>
-                                <span class="badge badge-success">
-                                    <a @click="createSession(chapitre.id, index)">
-                                        <i class="fa fa-plus" aria-hidden="true"></i> Session
-                                    </a>
-                                </span>
-                            </small>
+                        <br />
+                        <p>
+                            <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                <button type="button" class="btn btn-outline-primary btn-xs" @click="editChapitre(chapitre)"><i class="ti-pencil-alt"></i> Chapitre</button>
+                                <button type="button" class="btn btn-outline-danger btn-xs" @click="deleteChapitre(chapitre)"><i class="ti-trash" aria-hidden="true"></i> Chapitre</button>
+                                <button type="button" class="btn btn-outline-success btn-xs" @click="createSession(chapitre.id, index)"><i class="ti-plus" aria-hidden="true"></i> Session</button>
+                            </div>
                         </p>
 
                         <div class="row">
@@ -97,8 +79,22 @@
                 }
             })
 
-            this.$on('chapitre_deleted', (chapitre) => {
-                this.deleteChapitre(chapitre);
+            SessionBus.$on('session_created', (add_data) => {
+                axios.get(`/chapitres.byid/${add_data.chapitreId}`)
+                    .then(({data}) => {
+                        if (this.courId === data.cour_id) {
+                            this.updateChapitre(data)
+                        }
+                    });
+            })
+
+            SessionBus.$on('session_updated', (upd_data) => {
+                axios.get(`/chapitres.byid/${upd_data.chapitreId}`)
+                    .then(({data}) => {
+                        if (this.courId === data.cour_id) {
+                            this.updateChapitre(data)
+                        }
+                    });
             })
         },
         data() {
@@ -116,14 +112,17 @@
             },
             updateChapitre(chapitre) {
                 // we get the index of the modified chapitre
-                let chapitreIndex = this.chapitres.findIndex(s => {
-                    return chapitre.id === s.id
+                let chapitreIndex = this.chapitres.findIndex(c => {
+                    return chapitre.id === c.id
                 })
-                this.chapitres.splice(chapitreIndex, 1, chapitre)
-                window.noty({
-                    message: 'Chapitre modifié avec succès',
-                    type: 'success'
-                })
+                // if this chapitre does exists, it is updated from the list
+                if (chapitreIndex !== -1) {
+                    this.chapitres.splice(chapitreIndex, 1, chapitre)
+                    window.noty({
+                        message: 'Chapitre modifié avec succès',
+                        type: 'success'
+                    })
+                }
             },
             addChapitre(chapitre) {
                 let chapitreIndex = this.chapitres.findIndex(c => {

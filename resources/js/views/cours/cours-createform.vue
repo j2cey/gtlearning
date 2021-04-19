@@ -29,8 +29,7 @@
                             track-by="id"
                             key="id"
                             placeholder="Auteur"
-                            label="nom"
-                            :custom-label="customLabelAuteur"
+                            label="nomComplet"
                         >
                         </multiselect>
                         <span class="invalid-feedback d-block" role="alert" v-if="coursForm.errors.has('auteur')" v-text="coursForm.errors.get('auteur')"></span>
@@ -89,8 +88,7 @@
                             >
                         </div>
                         <p v-if="imageData" class="mb-0 text-sm font-weight-light"><small>taille: {{ (imagesize/1024).toFixed(2) }} KB</small></p>
-                        <span class="invalid-feedback d-block" role="alert" v-if="coursForm.errors.has('image')" v-text="coursForm.errors.get('image')"></span>
-
+                        <span class="invalid-feedback d-block" role="alert" v-if="coursForm.errors.has('imagecours_file')" v-text="coursForm.errors.get('imagecours_file')"></span>
                     </div>
                 </div>
 
@@ -100,7 +98,8 @@
         <!-- /.card-body -->
         <div class="card-footer justify-content-between">
             <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" @click="close()">Fermer</button>
-            <button type="button" class="btn btn-warning btn-sm" @click="updateCours()" :disabled="!isValidCreateForm" v-if="editing">Enregister</button>
+            <button type="button" class="btn btn-warning btn-sm" @click="updateCours()" :disabled="!isValidCreateForm" v-if="editing">Modifier</button>
+            <button type="button" class="btn btn-danger btn-sm" @click="deleteCours()" v-if="editing">Supprimer</button>
             <button type="button" class="btn btn-warning btn-sm" @click="createCours()" :disabled="!isValidCreateForm" v-else>Créer Cours</button>
         </div>
         <!-- /.card-footer -->
@@ -132,22 +131,22 @@
         },
         components: { Multiselect },
         beforeMount() {
-            if (this.cours_prop == null) {
+            if (this.cours_prop === null) {
                 this.cours = null
             } else {
-                this.imagesize = this.cours_prop.imagecours.size
-                this.generateImage64(this.cours_prop.imagecours.fullpath, this.cours_prop.imagecours.type)
+                if ( typeof this.cours_prop.imagecours === 'undefined' || this.cours_prop.imagecours === null) {
+                    this.imagesize = null
+                } else {
+                    this.imagesize = this.cours_prop.imagecours.size
+                    this.generateImage64(this.cours_prop.imagecours.fullpath, this.cours_prop.imagecours.type)
+                }
             }
         },
         mounted() {
             if (this.cours_prop == null) {
                 console.log("cours-createform: cours_prop is null")
             } else {
-                console.log("cours-createform: cours_prop is NOT null")
-                this.editing = true
-                this.cours = new Cours(this.cours_prop)
-                this.coursForm = new Form(this.cours_prop)
-                this.coursId = this.cours_prop.uuid
+                this.initCoursForm(this.cours_prop)
 
                 //this.imageData = this.cours_prop.imagePath
                 //this.generateBase64(this.cours_prop.imagePath)
@@ -170,7 +169,7 @@
                 loading: false,
                 classes: [],
                 auteurs: [],
-                selectedFile : null,
+                selectedImagecours : null,
                 url: null,
                 imageData: null,
                 imagesize: null
@@ -178,11 +177,13 @@
         },
         methods: {
             close() {
-                if (this.cours_prop == null) {
-                    window.location = '/cours'
-                } else {
-                    window.location = '/cours/' + this.cours.uuid
-                }
+                window.location = '/cours'
+            },
+            initCoursForm(cours) {
+                this.editing = true
+                this.cours = new Cours(cours)
+                this.coursForm = new Form(cours)
+                this.coursId = this.cours.uuid
             },
             clearForm() {
                 this.coursForm = new Form(new Cours({}));
@@ -194,12 +195,11 @@
                 const input = this.$refs.fileInput
                 const files = input.files
                 if (files && files[0]) {
-                    this.selectedFile = files[0]
-                    this.imagesize = this.selectedFile.size
+                    this.selectedImagecours = files[0]
+                    this.imagesize = this.selectedImagecours.size
                     const reader = new FileReader
                     reader.onload = e => {
                         this.imageData = e.target.result
-                        console.log("image load: ", e.target.result)
                     }
                     reader.readAsDataURL(files[0])
                     this.$emit('input', files[0])
@@ -237,12 +237,13 @@
             },
             customLabelAuteur ({ nom, prenom }) {
                 return `${nom} ${prenom}`
+                // :custom-label="customLabelAuteur"
             },
             createCours() {
                 this.loading = true
 
                 const fd = new FormData();
-                fd.append('imagecours', this.selectedFile);
+                fd.append('imagecours_file', this.selectedImagecours);
 
                 this.coursForm
                     .post(`/cours`, fd)
@@ -258,7 +259,6 @@
                             cancelButtonText: 'No',
                             showLoaderOnConfirm: true
                         }).then((result) => {
-                            console.log('emit courscree: ', data)
                             //this.$emit('courscree', data);
                             window.location = '/cours/' + data.uuid + '/edit'
                         })
@@ -270,17 +270,49 @@
             updateCours() {
                 this.loading = true
 
+                var fd = new FormData();
+
+                if ( typeof this.selectedImagecours === 'undefined' || this.selectedImagecours === null) {
+                    fd = undefined
+                } else {
+                    fd = new FormData();
+                    fd.append('imagecours_file', this.selectedImagecours);
+                }
+
                 this.coursForm
-                    .put(`/cours/${this.coursId}`, undefined)
+                    .put(`/cours/${this.coursId}`, fd)
                     .then(data => {
                         this.loading = false
-                        this.$swal('Cours successful updated!', '', 'success').then(() => {
-                            this.close()
+                        this.initCoursForm(data)
+                        window.noty({
+                            message: 'Cours modifié avec succès',
+                            type: 'success'
                         })
-
                     }).catch(error => {
                     this.loading = false
                 });
+            },
+            deleteCours() {
+                this.$swal({
+                    title: 'Supprimer le Cours ?',
+                    text: "Vous ne pourrez pas récupérer ces données !",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui!'
+                }).then((result) => {
+                    if(result.value) {
+                        axios.delete(`/cours/${this.cours.uuid}`)
+                            .then(resp => {
+                                this.$swal('Cours supprimé avec succès', '', 'success').then(() => {
+                                    window.location = '/cours'
+                                })
+                            }).catch(error => {
+                            window.handleErrors(error)
+                        })
+                    }
+                })
             },
         },
         computed: {

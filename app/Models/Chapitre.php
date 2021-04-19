@@ -33,12 +33,20 @@ class Chapitre extends BaseModel implements Auditable
 
     protected $with = ['sessions'];
 
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['duree'];
+
     #region Validation Rules
 
     public static function defaultRules() {
         return [
             'intitule' => ['required'],
             'cour_id' => ['required'],
+            'description' => ['required'],
         ];
     }
     public static function createRules() {
@@ -54,8 +62,29 @@ class Chapitre extends BaseModel implements Auditable
 
     public static function messagesRules() {
         return [
-
+            'intitule.required' => 'Prière de renseigner l intitule',
+            'cour_id.required' => 'Prière de séléctionner le cours',
+            'description.required' => 'La description est obligatoire',
         ];
+    }
+
+    #endregion
+
+    #region Accessors
+
+    public function getDureeAttribute() {
+
+        //$secs = $this->sessions->sum('duree_secs');
+        $secs = 0;
+
+        foreach ($this->sessions as $session) {
+            $secs += $session->videosession->duration_secs;
+        }
+
+        $ss = floor($secs % 60);
+        $mm = floor($secs / 60);
+
+        return "{$mm}:{$ss}";
     }
 
     #endregion
@@ -86,6 +115,8 @@ class Chapitre extends BaseModel implements Auditable
         }
     }
 
+    #endregion
+
     public static function boot ()
     {
         parent::boot();
@@ -96,6 +127,4 @@ class Chapitre extends BaseModel implements Auditable
             $model->sessions()->get(['id'])->each->delete();
         });
     }
-
-    #endregion
 }

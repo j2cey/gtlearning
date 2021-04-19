@@ -84,6 +84,9 @@
 <div id="app">
     @yield('content')
     <vue-noty></vue-noty>
+    @guest
+        <vue-login></vue-login>
+    @endguest
 </div>
 
 

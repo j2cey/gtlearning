@@ -31,7 +31,6 @@ class CreatePersonnesTable extends Migration
             $table->string('adresse')->nullable()->comment('adresse de la Personne');
             $table->string('telephone')->nullable()->comment('telephone de la Personne');
             $table->string('fonction')->nullable()->comment('fonction de la Personne');
-            $table->string('image')->nullable()->comment('url de la photo de la personne');
         });
         $this->setTableComment($this->table_name,$this->table_comment);
     }

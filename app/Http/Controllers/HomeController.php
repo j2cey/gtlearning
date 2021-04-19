@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cours;
 use App\Models\Niveau;
 use Illuminate\Http\Request;
 
@@ -25,8 +26,10 @@ class HomeController extends Controller
     public function index()
     {
         $niveaux = Niveau::get();
+        $cours = Cours::orderBy('id', 'desc')->skip(0)->take(10)->get();
 
         return view('home')
-            ->with('niveaux', $niveaux);
+            ->with('niveaux', $niveaux)
+            ->with('cours', $cours);
     }
 }

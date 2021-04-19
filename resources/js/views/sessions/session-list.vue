@@ -6,11 +6,21 @@
 
                 <tr v-for="(session, index) in sessions" v-if="sessions">
                     <td>
-                        <small>{{ session.intitule }}</small>
+                        <a @click="editSession(session)"><small>{{ session.intitule }}</small></a>
                     </td>
                     <td>
                         <small>
-                            <span class="badge badge-info"><span class="fa fa-clock"></span> {{ session.duree_mm + ':' + session.duree_ss }} </span>
+                            <span class="badge badge-info"><span class="fa fa-clock"></span> {{ session.videosession.duration_mm + ':' + session.videosession.duration_ss }} </span>
+                        </small>
+                    </td>
+                    <td>
+                        <small>
+                            <a class="btn btn-xs" @click="editSession(session)">
+                                <i class="ti-pencil-alt" style="color:green"></i>
+                            </a>
+                            <a class="btn btn-xs" @click="deleteSession(session)">
+                                <i class="ti-trash" style="color:red"></i>
+                            </a>
                         </small>
                     </td>
                 </tr>
@@ -34,46 +44,20 @@
         data() {
             return {
                 sessions: this.sessions_prop,
-                chapitreid: this.chapitreid_prop
+                chapitreId: this.chapitreid_prop
             }
         },
         mounted() {
-            this.$on('session_creee', (session) => {
-                window.noty({
-                    message: 'Session créée avec succès',
-                    type: 'success'
-                })
-
-                this.sessions.push(session)
-            })
-
-            this.$on('session_modifiee', (session) => {
-                // on récupère l'index de session modifiée
-                let sessionIndex = this.sessions.findIndex(s => {
-                    return session.id == s.id
-                })
-
-                // TODO: Inserer la nouvelle session en fonction de son numéro d'ordre (dans le UPDATE)
-                this.sessions.splice(sessionIndex, 1, session)
-                window.noty({
-                    message: 'Session modifiée avec succès',
-                    type: 'success'
-                })
-
-            })
-
-            SessionBus.$on('modifier_session', (upd_data) => {
-                // Session modifiée à mettre à jour sur la liste
-                if (this.chapitreid == upd_data.chapitreId) {
-                    this.updateSession(upd_data.session)
+            SessionBus.$on('session_created', (add_data) => {
+                if (this.chapitreId === add_data.chapitreId) {
+                    console.log('session_created received: ', add_data)
+                    this.addSession(add_data.session)
                 }
             })
 
-            SessionBus.$on('session_to_add', (add_data) => {
-                // Session créée à insérer sur la liste
-                console.log('reception session_to_add',add_data)
-                if (this.chapitreid == add_data.chapitreId) {
-                    this.createSession(add_data.session)
+            SessionBus.$on('session_updated', (upd_data) => {
+                if (this.chapitreId === upd_data.chapitreId) {
+                    this.updateSession(upd_data.session)
                 }
             })
         },
@@ -87,45 +71,66 @@
             creerNouvelleSession() {
                 this.$emit('creer_session', this.chapitreid)
             },
-            deleteSession(id, key) {
-                if(confirm('Voulez-vous vraiment supprimer ?')) {
-                    Axios.delete(`/admin/${this.chapitre_id}/sessions/${id}`)
-                        .then(resp => {
-                            this.sessions.splice(key, 1)
-                            window.noty({
-                                message: 'Session supprimée avec succès',
-                                type: 'success'
-                            })
-                        }).catch(error => {
-                        window.handleErrors(error)
-                    })
-                }
+            deleteSession(session) {
+                this.$swal({
+                    title: 'Supprimer la Session ?',
+                    text: "Vous ne pourrez pas récupérer ces données !",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui!'
+                }).then((result) => {
+                    if(result.value) {
+                        axios.delete(`/sessions/${session.uuid}`)
+                            .then(resp => {
+                                this.removeSession(session)
+                            }).catch(error => {
+                            window.handleErrors(error)
+                        })
+                    }
+                })
             },
             editSession(session) {
-                let chapitreId = this.chapitre_id
-                this.$parent.$emit('edit_session', { session, chapitreId })
+                SessionBus.$emit('edit_session', session)
+            },
+            addSession(session) {
+                let sessionIndex = this.sessions.findIndex(s => {
+                    return session.id === s.id
+                })
+                // if this session does not already exists, it is inserted in the list
+                if (sessionIndex === -1) {
+                    window.noty({
+                        message: 'Session créée avec succès',
+                        type: 'success'
+                    })
+                    this.sessions.push(session)
+                }
             },
             updateSession(session) {
-                // on récupère l'index de session modifiée
+                // we get the index of the modified session
                 let sessionIndex = this.sessions.findIndex(s => {
-                    return session.id == s.id
+                    return session.id === s.id
                 })
-
-                // TODO: Inserer la nouvelle session en fonction de son numéro d'ordre (dans le UPDSATE)
                 this.sessions.splice(sessionIndex, 1, session)
                 window.noty({
                     message: 'Session modifiée avec succès',
                     type: 'success'
                 })
             },
-            createSession(session) {
-                window.noty({
-                    message: 'Session créée avec succès',
-                    type: 'success'
+            removeSession(session) {
+                let sessionIndex = this.sessions.findIndex(s => {
+                    return session.id === s.id
                 })
-
-                this.sessions.push(session)
-            }
+                // if this session exists, it is removed from list
+                if (sessionIndex !== -1) {
+                    window.noty({
+                        message: 'Session supprimée avec succès',
+                        type: 'success'
+                    })
+                    this.chapitres.splice(sessionIndex, 1)
+                }
+            },
         }
     }
 </script>

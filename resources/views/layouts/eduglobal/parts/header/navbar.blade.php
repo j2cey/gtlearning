@@ -28,7 +28,9 @@
                     <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">Cours</a>
                     <div class="dropdown-menu">
                         <ul>
-                            <li><a class="dropdown-item nav-link nav_item" href="/cours/create">Nouveau</a></li>
+                            @can('cours-create')
+                                <li><a class="dropdown-item nav-link nav_item" href="/cours/create">Nouveau</a></li>
+                            @endcan
 
                             <li><a class="dropdown-item nav-link nav_item" href="/cours">Tous Les Cours</a></li>
                             <li class="dropdown">
@@ -83,13 +85,12 @@
                     <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">Auteurs</a>
                     <div class="dropdown-menu">
                         <ul>
-                            <li><a class="dropdown-item nav-link nav_item" href="teacher.html">Tous Les Auteurs</a></li>
+                            @can('auteur-create')
+                                <li><a class="dropdown-item nav-link nav_item" href="/auteurs/create">Créer</a></li>
+                            @endcan
+                            <li><a class="dropdown-item nav-link nav_item" href="/auteurs">Tous Les Auteurs</a></li>
                         </ul>
                     </div>
-                </li>
-
-                <li>
-                    <a class="nav-link" href="contact.html">Contact</a>
                 </li>
             </ul>
         </div>
@@ -97,8 +98,8 @@
             <li><a href="javascript:void(0);" class="nav-link search_trigger"><i class="ion-ios-search-strong"></i></a>
                 <div class="search-overlay">
                     <div class="search_wrap">
-                        <form>
-                            <input type="text" placeholder="Search" class="form-control" id="search_input">
+                        <form action="{{ route('cours.index') }}">
+                            <input type="text" placeholder="Rechercher un cours" class="form-control" id="search_input" name="q">
                             <button type="submit" class="search_icon"><i class="ion-ios-search-strong"></i></button>
                         </form>
                     </div>

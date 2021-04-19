@@ -86,7 +86,7 @@ Vue.use(VueSweetalert2);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('vue-noty', require('./components/Noty').default);
-Vue.component('vue-login', require('./views/Login').default);
+Vue.component('vue-login', require('./views/auth/login').default);
 Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
 Vue.component('vue-ctk-date-time-picker', window['vue-ctk-date-time-picker']);
 Vue.component('vue-dtpicker', require('./components/vueDTpicker').default);
@@ -103,6 +103,8 @@ Vue.component('session-list', require('./views/sessions/session-list').default);
 Vue.component('session-item', require('./views/sessions/session-item').default);
 
 Vue.component('cours-create', require('./views/cours/cours-create').default);
+
+Vue.component('auteur-create', require('./views/auteurs/auteur-createform').default);
 
 Vue.component('times-circle', require('./components/Icons/TimesCircle').default);
 Vue.component('select-angle', require('./components/Form/SelectAngle').default);

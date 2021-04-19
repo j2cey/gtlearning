@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Session;
 use Illuminate\Http\Request;
-use Vimeo\Vimeo;
-use Vimeo\Exceptions\VimeoUploadException;
-use Vimeo\Exceptions\VimeoRequestException;
+use App\Http\Requests\Session\CreateSessionRequest;
+use App\Http\Requests\Session\UpdateSessionRequest;
 
 class SessionController extends Controller
 {
@@ -38,71 +37,21 @@ class SessionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param CreateSessionRequest $request
+     * @return Session
      */
-    public function store(Request $request)
+    public function store(CreateSessionRequest $request)
     {
-        $config = [
-            'client_id' => config('app.vimeo_client_id'),
-            'client_secret' => config('app.vimeo_client_secret'),
-            'access_token' => config('app.vimeo_access_token'),
-        ];
-        $lib = new Vimeo($config['client_id'], $config['client_secret'], $config['access_token']);
+        $new_session = new Session();
+        $new_session->intitule = $request->intitule;
+        $new_session->description = $request->description;
+        $new_session->save();
 
-        $temp_file_dir = config('app.temp_files_dir');
+        $new_session->createVimeoVideo($request);
 
-        $video_file = $request->file('video_file');
+        $new_session->setChapitre($request->chapitre_id);
 
-        $file_name = md5('temp_files_dir_' . time()) . '.' . $video_file->getClientOriginalExtension();
-
-        // Move image to folder
-        $video_file->move($temp_file_dir, $file_name);
-
-        $file_name = $temp_file_dir . '/' . $file_name;
-
-        try {
-            // Upload the file and include the video title and description.
-            $uri = $lib->upload($file_name, array(
-                'name' => $request->intitule,
-                'description' => "This video was uploaded through the Vimeo API's PHP SDK."
-            ));
-
-            // Get the metadata response from the upload and log out the Vimeo.com url
-            $video_data = $lib->request($uri . '?fields=link');
-            echo '"' . $file_name . ' has been uploaded to ' . $video_data['body']['link'] . "\n";
-
-            $new_session = new Session();
-            $new_session->intitule = $request->intitule;
-            $new_session->description = $request->description;
-            $new_session->lien = $video_data['body']['link'];
-            $new_session->save();
-
-            $new_session->setChapitre($request->cour_id);
-
-            dd($video_data,$uri);
-
-            return $new_session;
-
-            // Make an API call to edit the title and description of the video.
-            $lib->request($uri, array(
-                'name' => 'Vimeo API SDK test edit',
-                'description' => "This video was edited through the Vimeo API's PHP SDK.",
-            ), 'PATCH');
-
-            echo 'The title and description for ' . $uri . ' has been edited.' . "\n";
-
-            // Make an API call to see if the video is finished transcoding.
-            $video_data = $lib->request($uri . '?fields=transcode.status');
-            echo 'The transcode status for ' . $uri . ' is: ' . $video_data['body']['transcode']['status'] . "\n";
-        } catch (VimeoUploadException $e) {
-            // We may have had an error. We can't resolve it here necessarily, so report it to the user.
-            echo 'Error uploading ' . $file_name . "\n";
-            echo 'Server reported: ' . $e->getMessage() . "\n";
-        } catch (VimeoRequestException $e) {
-            echo 'There was an error making the request.' . "\n";
-            echo 'Server reported: ' . $e->getMessage() . "\n";
-        }
+        return $new_session->load('videosession');
     }
 
     /**
@@ -130,13 +79,24 @@ class SessionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Session  $session
-     * @return \Illuminate\Http\Response
+     * @param UpdateSessionRequest $request
+     * @param \App\Models\Session $session
+     * @return Session
      */
-    public function update(Request $request, Session $session)
+    public function update(UpdateSessionRequest $request, Session $session)
     {
-        //
+        $session->intitule = $request->intitule;
+        $session->description = $request->description;
+
+        if( $request->hasFile('video_file') ) {
+            $session->updateVimeoVideo($request);
+        } else {
+            $session->updateVideoInfosFromVimeo($session->videosession->video_uri,$request->intitule,$request->description);
+        }
+
+        $session->save();
+
+        return $session->load('videosession');
     }
 
     /**
@@ -147,6 +107,8 @@ class SessionController extends Controller
      */
     public function destroy(Session $session)
     {
-        //
+        $session->delete();
+
+        return response()->json(['status' => 'ok'], 200);
     }
 }

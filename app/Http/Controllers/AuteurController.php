@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Auteur;
+use App\Models\Personne;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\Auteur\CreateAuteurRequest;
 
 class AuteurController extends Controller
 {
@@ -13,18 +15,32 @@ class AuteurController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $recherche_cols = ['id', 'nom', 'description'];
+
+        $sortBy = 'id';
+        $orderBy = 'asc';
+        $perPage = 5;
+        $q = null;
+        if ($request->has('orderBy')) $orderBy = $request->query('orderBy');
+        if ($request->has('sortBy')) $sortBy = $request->query('sortBy');
+        if ($request->has('perPage')) $perPage = $request->query('perPage');
+        if ($request->has('q')) $q = $request->query('q');
+
+        //$auteurs = Auteur::paginate($perPage);
+        $auteurs = Auteur::search($q)->orderBy($sortBy, $orderBy)->paginate($perPage);
+
+        return view('auteurs.index', compact('auteurs', 'recherche_cols', 'orderBy', 'sortBy', 'q', 'perPage'));
     }
 
     public function fetch() {
-        //$auteurs = Auteur::get();
+        $auteurs = Auteur::get();
 
-        $auteurs = DB::table('auteurs')
+        /*$auteurs = DB::table('auteurs')
             ->join('personnes', 'personnes.id', '=', 'auteurs.personne_id')
             ->select('auteurs.*', 'personnes.nom', 'personnes.prenom')
-            ->get();
+            ->get();*/
 
         return $auteurs;
     }
@@ -36,18 +52,34 @@ class AuteurController extends Controller
      */
     public function create()
     {
-        //
+        return view('auteurs.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param CreateAuteurRequest $request
+     * @return void
      */
-    public function store(Request $request)
+    public function store(CreateAuteurRequest $request)
     {
-        //
+        $personne = Personne::create([
+            'email' => $request->email,
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
+            'telephone' => $request->telephone,
+            'fonction' => $request->fonction,
+        ]);
+
+        $auteur = Auteur::create([
+            'resume' => $request->resume,
+        ]);
+
+        $auteur->personne()->associate($personne);
+        $auteur->save();
+        $auteur->setImageauteur($request,"imageauteur_file");
+
+        return $auteur;
     }
 
     /**
@@ -69,7 +101,7 @@ class AuteurController extends Controller
      */
     public function edit(Auteur $auteur)
     {
-        //
+        return view('auteurs.edit', compact('auteur'));
     }
 
     /**
@@ -81,7 +113,18 @@ class AuteurController extends Controller
      */
     public function update(Request $request, Auteur $auteur)
     {
-        //
+        $auteur->personne->email = $request->email;
+        $auteur->personne->nom = $request->nom;
+        $auteur->personne->prenom = $request->prenom;
+        $auteur->personne->telephone = $request->telephone;
+        $auteur->personne->fonction = $request->fonction;
+
+        $auteur->resume = $request->resume;
+        $auteur->push();
+
+        $auteur->setImageauteur($request,"imageauteur_file");
+
+        return $auteur;
     }
 
     /**
@@ -92,6 +135,18 @@ class AuteurController extends Controller
      */
     public function destroy(Auteur $auteur)
     {
-        //
+        $auteur->load('cours');
+        try {
+            if ($auteur->cours->count() > 0) {
+                return response()->json(['status' => 'ko', 'message' => "Cet Auteur a des cours et ne peut être supprimé"], 200);
+            } else {
+                $del_resp = $auteur->delete();
+                return response()->json(['status' => 'ok', 'message' => "Auteur supprimé avec succès"], 200);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
+        }
     }
 }

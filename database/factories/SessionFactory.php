@@ -25,10 +25,7 @@ class SessionFactory extends Factory
         return [
             'intitule' => $this->faker->unique()->sentence($nb_words),
             'description' => $this->faker->unique()->paragraph(),
-            'posi' => $this->faker->unique()->randomNumber(),
-            'lien' => $this->faker->shuffleString(),
-            'duree_mm' => $this->faker->randomNumber(),
-            'duree_ss' => $this->faker->randomNumber()
+            'posi' => $this->faker->unique()->randomNumber()
         ];
     }
 }
